@@ -4,13 +4,22 @@ import request from '@/utils/request'
  * 员工管理
  *
  **/
-// 登录、
+// 员工登录 (Admin/Operator)
 export const login = (data: any) =>
   request({
     'url': '/employee/login',
     'method': 'post',
     data
   })
+
+// C端/志愿者登录 (Family/Volunteer)
+export const userLogin = (data: any) =>
+  request({
+    'url': '/user/user/login',
+    'method': 'post',
+    data
+  })
+
   // 退出
  export const userLogout = (params: any) =>
  request({

@@ -17,14 +17,14 @@ export const queryOrderDetailById = (params: any) => {
   })
 }
 
-// 派送接口
+// 派送接口 (志愿者确认取餐)
 export const deliveryOrder = (params: any) => {
   return request({
     url: `/order/delivery/${params.id}`,
     method: 'put' /*  */
   })
 }
-//完成接口
+//完成接口 (志愿者确认送达)
 export const completeOrder = (params: any) => {
   return request({
     url: `/order/complete/${params.id}`,
@@ -41,12 +41,20 @@ export const orderCancel = (params: any) => {
   })
 }
 
-//接单
+//接单 (调度派单)
 export const orderAccept = (params: any) => {
   return request({
     url: '/order/confirm',
     method: 'put' /*  */,
     data: { ...params }
+  })
+}
+
+//助餐点标记出餐
+export const markMealReady = (params: any) => {
+  return request({
+    url: `/order/mealReady/${params.id}`,
+    method: 'put'
   })
 }
 

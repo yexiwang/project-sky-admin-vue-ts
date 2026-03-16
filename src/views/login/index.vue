@@ -5,13 +5,16 @@
       <div class="login-form">
         <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
           <div class="login-form-title">
-            <img
-              src="@/assets/login/icon_logo.png"
-              style="width: 149px; height: 38px"
-              alt=""
-            />
-            <!-- <span class="title-label">苍穹外卖</span> -->
+            <h3 class="title-label">社区老年助餐服务系统</h3>
           </div>
+          
+          <div style="margin-bottom: 20px; text-align: center;">
+            <el-radio-group v-model="loginForm.loginType" size="small">
+              <el-radio-button label="employee">员工/管理员</el-radio-button>
+              <el-radio-button label="user">家属/志愿者</el-radio-button>
+            </el-radio-group>
+          </div>
+
           <el-form-item prop="username">
             <el-input
               v-model="loginForm.username"
@@ -68,8 +71,8 @@ export default class extends Vue {
     }
   }
   private validatePassword = (rule: any, value: string, callback: Function) => {
-    if (value.length < 6) {
-      callback(new Error('密码必须在6位以上'))
+    if (value.length < 3) {
+      callback(new Error('密码必须在3位以上'))
     } else {
       callback()
     }
@@ -77,9 +80,7 @@ export default class extends Vue {
   private loginForm = {
     username: 'admin',
     password: '123456',
-  } as {
-    username: String
-    password: String
+    loginType: 'employee'
   }
 
   loginRules = {
@@ -97,19 +98,12 @@ export default class extends Vue {
     ;(this.$refs.loginForm as ElForm).validate(async (valid: boolean) => {
       if (valid) {
         this.loading = true
-        await UserModule.Login(this.loginForm as any)
-          .then((res: any) => {
-            if (String(res.code) === '1') {
-              this.$router.push('/')
-            } else {
-              // this.$message.error(res.msg)
-              this.loading = false
-            }
-          })
-          .catch(() => {
-            // this.$message.error('用户名或密码错误！')
-            this.loading = false
-          })
+        try {
+          await UserModule.Login(this.loginForm)
+          this.$router.push('/')
+        } catch (err) {
+          this.loading = false
+        }
       } else {
         return false
       }
