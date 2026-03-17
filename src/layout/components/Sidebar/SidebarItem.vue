@@ -61,7 +61,7 @@
 import path from 'path'
 import { Component, Prop, Vue } from 'vue-property-decorator'
 import { UserModule } from '@/store/modules/user'
-import { Route, RouteConfig } from 'vue-router'
+import { RouteConfig } from 'vue-router'
 import { isExternal } from '@/utils/validate'
 import SidebarItemLink from './SidebarItemLink.vue'
 

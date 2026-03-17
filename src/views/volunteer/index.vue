@@ -9,29 +9,37 @@
           <el-option label="已完成" :value="6" />
         </el-select>
       </div>
-      
+
       <el-row :gutter="20">
-        <el-col :span="8" v-for="item in tableData" :key="item.id" style="margin-bottom: 20px;">
+        <el-col v-for="item in tableData" :key="item.id" :span="8" style="margin-bottom: 20px;">
           <el-card shadow="hover">
             <div slot="header" class="clearfix">
               <span>订单号: {{ item.number }}</span>
-              <el-tag :type="getStatusType(item.status)" style="float: right">{{ getStatusText(item.status) }}</el-tag>
+              <el-tag :type="getStatusType(item.status)" style="float: right">
+                {{ getStatusText(item.status) }}
+              </el-tag>
             </div>
             <div class="text item">
               <p><strong>取餐点:</strong> {{ item.diningPointName || '未知' }}</p>
               <p><strong>送餐地址:</strong> {{ item.address }}</p>
               <p><strong>收货人:</strong> {{ item.consignee }} ({{ item.phone }})</p>
               <p><strong>下单时间:</strong> {{ item.orderTime }}</p>
-              <p v-if="item.remark" style="color: red"><strong>备注:</strong> {{ item.remark }}</p>
+              <p v-if="item.remark" style="color: red">
+                <strong>备注:</strong> {{ item.remark }}
+              </p>
             </div>
             <div style="margin-top: 15px; text-align: center">
-              <el-button type="primary" v-if="item.status === 4" @click="handlePickup(item.id)">确认取餐</el-button>
-              <el-button type="success" v-if="item.status === 5" @click="handleComplete(item.id)">确认送达</el-button>
+              <el-button v-if="item.status === 4" type="primary" @click="handlePickup(item.id)">
+                确认取餐
+              </el-button>
+              <el-button v-if="item.status === 5" type="success" @click="handleComplete(item.id)">
+                确认送达
+              </el-button>
             </div>
           </el-card>
         </el-col>
       </el-row>
-      
+
       <el-pagination
         class="pageList"
         :page-sizes="[12, 24, 36]"

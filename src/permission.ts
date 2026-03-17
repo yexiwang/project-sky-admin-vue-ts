@@ -8,11 +8,11 @@ import Cookies from 'js-cookie'
 
 NProgress.configure({ 'showSpinner': false })
 
-router.beforeEach(async (to: Route, _: Route, next: any) => {
+router.beforeEach(async (to: any, _: any, next: any) => {
   NProgress.start()
   if (Cookies.get('token')) {
     const role = Cookies.get('role') || 'ADMIN'; // 获取用户角色
-    
+
     // 权限校验
     if (to.meta.roles && to.meta.roles.length > 0) {
       if (to.meta.roles.includes(role)) {
@@ -39,7 +39,7 @@ router.beforeEach(async (to: Route, _: Route, next: any) => {
   }
 })
 
-router.afterEach((to: Route) => {
+router.afterEach((to: any) => {
   NProgress.done()
   document.title = to.meta.title
 })

@@ -17,6 +17,15 @@ export const queryOrderDetailById = (params: any) => {
   })
 }
 
+// 下单接口
+export const addOrder = (data: any) => {
+  return request({
+    url: '/order/submit',
+    method: 'post',
+    data
+  })
+}
+
 // 派送接口 (志愿者确认取餐)
 export const deliveryOrder = (params: any) => {
   return request({

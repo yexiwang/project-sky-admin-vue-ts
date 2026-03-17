@@ -4,17 +4,21 @@
       <el-tabs v-model="activeName">
         <el-tab-pane label="今日菜单" name="menu">
           <el-row :gutter="20">
-            <el-col :span="6" v-for="dish in dishList" :key="dish.id" style="margin-bottom: 20px;">
+            <el-col v-for="dish in dishList" :key="dish.id" :span="6" style="margin-bottom: 20px;">
               <el-card :body-style="{ padding: '0px' }">
                 <img :src="dish.image" class="image">
                 <div style="padding: 14px;">
                   <span>{{ dish.name }}</span>
                   <div class="bottom clearfix">
                     <span class="price">￥{{ dish.price }}</span>
-                    <el-button type="text" class="button" @click="handleOrder(dish)">预订</el-button>
+                    <el-button type="text" class="button" @click="handleOrder(dish)">
+                      预订
+                    </el-button>
                   </div>
                   <div v-if="dish.nutritionTags" style="margin-top: 5px;">
-                    <el-tag size="mini" type="success" v-for="tag in dish.nutritionTags.split(',')" :key="tag" style="margin-right: 5px">{{ tag }}</el-tag>
+                    <el-tag v-for="tag in dish.nutritionTags.split(',')" :key="tag" size="mini" type="success" style="margin-right: 5px">
+                      {{ tag }}
+                    </el-tag>
                   </div>
                 </div>
               </el-card>
@@ -46,16 +50,20 @@
               step: '00:15',
               end: '13:30'
             }"
-            placeholder="选择时间">
-          </el-time-select>
+            placeholder="选择时间"
+          />
         </el-form-item>
         <el-form-item label="备注">
           <el-input v-model="form.remark" type="textarea" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="open = false">取 消</el-button>
-        <el-button type="primary" @click="submitOrder">确认支付</el-button>
+        <el-button @click="open = false">
+          取 消
+        </el-button>
+        <el-button type="primary" @click="submitOrder">
+          确认支付
+        </el-button>
       </div>
     </el-dialog>
   </div>
@@ -96,7 +104,7 @@ export default class extends Vue {
   private async getElderly() {
     // 获取当前用户绑定的老人
     // 这里暂时用分页接口模拟，实际应该有 getByUserId 接口
-    const res = await getElderlyPage({ page: 1, pageSize: 100 }) 
+    const res = await getElderlyPage({ page: 1, pageSize: 100 })
     // 简单过滤，实际应由后端过滤
     this.elderlyList = res.data.records
   }

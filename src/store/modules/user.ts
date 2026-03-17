@@ -4,7 +4,7 @@ import { getToken, setToken, removeToken,getStoreId, setStoreId, removeStoreId, 
 import store from '@/store'
 import Cookies from 'js-cookie'
 import { Message } from 'element-ui'
-import jwtDecode from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode'
 
 export interface IUserState {
   token: string
@@ -74,7 +74,7 @@ class User extends VuexModule implements IUserState {
     username = username.trim()
     this.SET_USERNAME(username)
     Cookies.set('username', username)
-    
+
     // 根据登录类型调用不同接口
     let res
     if (loginType === 'user') {
@@ -87,18 +87,18 @@ class User extends VuexModule implements IUserState {
     if (String(data.code) === '1') {
       this.SET_TOKEN(data.data.token)
       setToken(data.data.token)
-      
+
       // 解析Token获取角色
       try {
         const decoded: any = jwtDecode(data.data.token)
         const role = decoded.role || (loginType === 'user' ? 'FAMILY' : 'ADMIN') // 默认值处理
         Cookies.set('role', role)
-        
+
         // 存储用户信息
         const userInfo = { ...data.data, role }
         this.SET_USERINFO(userInfo)
         Cookies.set('user_info', userInfo)
-        
+
         // 如果是管理员，默认角色为 ADMIN
         if (loginType !== 'user' && !decoded.role) {
            Cookies.set('role', 'ADMIN')
@@ -135,7 +135,7 @@ class User extends VuexModule implements IUserState {
       throw Error('GetUserInfo: token is undefined!')
     }
 
-    const data = JSON.parse(<string>getUserInfo()) 
+    const data = JSON.parse(<string>getUserInfo())
     if (!data) {
       throw Error('Verification failed, please Login again.')
     }

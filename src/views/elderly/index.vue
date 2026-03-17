@@ -12,15 +12,20 @@
           @keyup.enter.native="handleQuery"
         />
         <div class="tableLab">
-          <el-button type="primary" @click="handleAdd">+ 新增老人档案</el-button>
+          <el-button type="primary" @click="handleAdd">
+            + 新增老人档案
+          </el-button>
         </div>
       </div>
       <el-table
+        v-loading="loading"
         :data="tableData"
         stripe
         class="tableBox"
-        v-loading="loading"
       >
+        <div slot="empty" style="padding: 20px; text-align: center; color: #999;">
+          暂无数据 - tableData 长度: {{ tableData.length }}
+        </div>
         <el-table-column prop="name" label="姓名" />
         <el-table-column prop="gender" label="性别" />
         <el-table-column prop="age" label="年龄" />
@@ -110,8 +115,12 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="submitForm">
+          确 定
+        </el-button>
+        <el-button @click="cancel">
+          取 消
+        </el-button>
       </div>
     </el-dialog>
   </div>
@@ -155,13 +164,37 @@ export default class extends Vue {
   private async getList() {
     this.loading = true
     try {
-      const res = await getElderlyPage({
+      const params: any = {
         page: this.page,
-        pageSize: this.pageSize,
-        name: this.queryParams.name
-      })
-      this.tableData = res.data.records
-      this.total = res.data.total
+        pageSize: this.pageSize
+      }
+      // 只有当 name 有值时才添加到参数中
+      if (this.queryParams.name && this.queryParams.name.trim()) {
+        params.name = this.queryParams.name.trim()
+      }
+
+      console.log('请求参数:', params)
+
+      const res = await getElderlyPage(params)
+      console.log('API 返回的完整数据:', res)
+      console.log('res.data:', res.data)
+      console.log('res.data.data:', res.data && res.data.data)
+      console.log('res.data.data.records:', res.data && res.data.data && res.data.data.records)
+      console.log('res.data.data.total:', res.data && res.data.data && res.data.data.total)
+
+      this.tableData = (res.data && res.data.data && res.data.data.records) || []
+      this.total = (res.data && res.data.data && res.data.data.total) || 0
+
+      console.log('tableData:', this.tableData)
+      console.log('tableData.length:', this.tableData.length)
+      console.log('total:', this.total)
+      console.log('第一条数据:', this.tableData[0])
+
+      // 强制更新视图
+      this.$forceUpdate()
+    } catch (error) {
+      console.error('获取老人列表失败:', error)
+      this.$message.error('获取数据失败')
     } finally {
       this.loading = false
     }
@@ -181,24 +214,60 @@ export default class extends Vue {
   private async handleEdit(row: any) {
     this.reset()
     const id = row.id
-    const res = await queryElderlyById(id)
-    this.form = res.data
-    this.open = true
-    this.title = '修改老人档案'
+    console.log('handleEdit - 老人ID:', id)
+    console.log('handleEdit - 行数据:', row)
+
+    try {
+      const res = await queryElderlyById(id)
+      console.log('handleEdit - API返回完整数据:', res)
+      console.log('handleEdit - res.data:', res.data)
+      console.log('handleEdit - res.data.data:', res.data && res.data.data)
+
+      const elderlyData = res.data && res.data.data ? res.data.data : res.data
+      console.log('handleEdit - 解析后的老人数据:', elderlyData)
+
+      this.form = {
+        id: elderlyData.id,
+        name: elderlyData.name,
+        gender: elderlyData.gender,
+        age: elderlyData.age,
+        phone: elderlyData.phone,
+        address: elderlyData.address,
+        gridCode: elderlyData.gridCode,
+        healthInfo: elderlyData.healthInfo,
+        specialNeeds: elderlyData.specialNeeds
+      }
+
+      console.log('handleEdit - 表单数据:', this.form)
+
+      this.open = true
+      this.title = '修改老人档案'
+    } catch (error) {
+      console.error('handleEdit - 获取老人详情失败:', error)
+      this.$message.error('获取老人详情失败')
+    }
   }
 
   private async submitForm() {
+    console.log('submitForm - 表单数据:', this.form);
     (this.$refs['form'] as any).validate(async (valid: boolean) => {
       if (valid) {
-        if (this.form.id != undefined) {
-          await editElderly(this.form)
-          this.$message.success('修改成功')
-        } else {
-          await addElderly(this.form)
-          this.$message.success('新增成功')
+        try {
+          if (this.form.id != undefined) {
+            console.log('submitForm - 执行修改操作，数据:', this.form)
+            await editElderly(this.form)
+            this.$message.success('修改成功')
+          } else {
+            console.log('submitForm - 执行新增操作，数据:', this.form)
+            await addElderly(this.form)
+            this.$message.success('新增成功')
+          }
+          this.open = false
+          this.getList()
+        } catch (error) {
+          console.error('submitForm - 操作失败:', error)
+          this.$message.error('操作失败，请重试')
         }
-        this.open = false
-        this.getList()
       }
     })
   }

@@ -12,14 +12,16 @@
           @keyup.enter.native="handleQuery"
         />
         <div class="tableLab">
-          <el-button type="primary" @click="handleAdd">+ 新建助餐点</el-button>
+          <el-button type="primary" @click="handleAdd">
+            + 新建助餐点
+          </el-button>
         </div>
       </div>
       <el-table
+        v-loading="loading"
         :data="tableData"
         stripe
         class="tableBox"
-        v-loading="loading"
       >
         <el-table-column prop="name" label="助餐点名称" />
         <el-table-column prop="address" label="地址" />
@@ -90,14 +92,22 @@
         </el-form-item>
         <el-form-item label="状态">
           <el-radio-group v-model="form.status">
-            <el-radio :label="1">营业</el-radio>
-            <el-radio :label="0">休息</el-radio>
+            <el-radio :label="1">
+              营业
+            </el-radio>
+            <el-radio :label="0">
+              休息
+            </el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="submitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="submitForm">
+          确 定
+        </el-button>
+        <el-button @click="cancel">
+          取 消
+        </el-button>
       </div>
     </el-dialog>
   </div>
@@ -125,6 +135,7 @@ export default class extends Vue {
   private queryParams = {
     name: ''
   }
+  private ids: any[] = []
   private open = false
   private title = ''
   private form: any = {

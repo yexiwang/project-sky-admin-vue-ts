@@ -1,17 +1,23 @@
 <template>
   <div class="login">
     <div class="login-box">
-      <img src="@/assets/login/login-l.png" alt="" />
+      <img src="@/assets/login/login-l.png" alt="">
       <div class="login-form">
         <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
           <div class="login-form-title">
-            <h3 class="title-label">社区老年助餐服务系统</h3>
+            <h3 class="title-label">
+              社区老年助餐服务系统
+            </h3>
           </div>
-          
+
           <div style="margin-bottom: 20px; text-align: center;">
             <el-radio-group v-model="loginForm.loginType" size="small">
-              <el-radio-button label="employee">员工/管理员</el-radio-button>
-              <el-radio-button label="user">家属/志愿者</el-radio-button>
+              <el-radio-button label="employee">
+                员工/管理员
+              </el-radio-button>
+              <el-radio-button label="user">
+                家属/志愿者
+              </el-radio-button>
             </el-radio-group>
           </div>
 
@@ -54,7 +60,6 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator'
-import { Route } from 'vue-router'
 import { Form as ElForm, Input } from 'element-ui'
 import { UserModule } from '@/store/modules/user'
 import { isValidUsername } from '@/utils/validate'
@@ -91,11 +96,11 @@ export default class extends Vue {
   private redirect?: string
 
   @Watch('$route', { immediate: true })
-  private onRouteChange(route: Route) {}
+  private onRouteChange(route: any) {}
 
   // 登录
   private handleLogin() {
-    ;(this.$refs.loginForm as ElForm).validate(async (valid: boolean) => {
+    (this.$refs.loginForm as ElForm).validate(async (valid: boolean) => {
       if (valid) {
         this.loading = true
         try {

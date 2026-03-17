@@ -18,8 +18,14 @@ const service = axios.create({
 // Request interceptors
 service.interceptors.request.use(
   (config: any) => {
-    // console.log(config, 'config')
-    // config.data = config.params
+    console.log('=== 请求拦截器 ===')
+    console.log('请求URL:', config.url)
+    console.log('请求方法:', config.method)
+    console.log('请求参数:', config.params)
+    console.log('请求头:', config.headers)
+    console.log('完整配置:', config)
+    console.log('==================')
+
     // Add X-Access-Token header to every request, you can add other custom headers here
     if (UserModule.token) {
       config.headers['token'] = UserModule.token
@@ -74,7 +80,12 @@ service.interceptors.request.use(
 // Response interceptors
 service.interceptors.response.use(
   (response: any) => {
-    // console.log(response, 'response')
+    console.log('=== 响应拦截器 ===')
+    console.log('响应URL:', response.config.url)
+    console.log('响应状态:', response.status)
+    console.log('响应数据:', response.data)
+    console.log('==================')
+
     if (response.data.status === 401) {
       router.push('/login')
       // const res = response.data
